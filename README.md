@@ -1,6 +1,7 @@
 # Assignment 1 - Review of C# Basic Concepts and Introduction to Git
 
 ## Author
+Zachary Dwyer
 
 ## Description
 
@@ -25,6 +26,13 @@ It might be useful while developing this program to use a smaller sized maze, an
 Don't forget that you must have a base case for your recursive method or you will continue to get a stack overflow. 
 
 ## Outside Resources Used
+Iterating through a for loop with a 2d array:
+
+http://www.dotnetperls.com/2d-array
+
+Transposing a 2d array:
+
+http://stackoverflow.com/questions/26197466/transposing-a-matrix-from-a-2d-array
 
 ## Known Problems, Issues, And/Or Errors in the Program
 

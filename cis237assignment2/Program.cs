@@ -6,28 +6,74 @@ using System.Threading.Tasks;
 
 namespace cis237assignment2
 {
+
     class Program
     {
-        /// <summary>
-        /// This is the main entry point for the program.
-        /// You are free to add anything else you would like to this program,
-        /// however the maze solving part needs to occur in the MazeSolver class.
-        /// </summary>
-        /// <param name="args"></param>
+
         static void Main(string[] args)
         {
-            /// <summary>
-            /// Starting Coordinates.
-            /// </summary>
+
+            // Ask user if they want the drawn effect.
+            MazeSolver.applyDrawnEffect = !printNormally();
+
+            // Starting Coords
             const int X_START = 1;
             const int Y_START = 1;
+          
+            // Create new Maze Solver
+            MazeSolver mazeSolver = new MazeSolver();
 
-            ///<summary>
-            /// The first maze that needs to be solved.
-            /// Note: You may want to make a smaller version to test and debug with.
-            /// You don't have to, but it might make your life easier.
-            /// </summary>
-            char[,] maze1 = 
+            // Assign new maze
+            char[,] maze1 = getNewMaze();
+
+            // Tell maze solver to solve the given maze, then print it.
+            mazeSolver.SolveMaze(maze1, X_START, Y_START);
+            mazeSolver.PrintMaze();
+            Console.WriteLine("Maze solved! (\"O\" indicates the successful path.) Press any key to solve the transposed version.");
+            Console.ReadKey(true);
+
+            // Create new maze solver
+            mazeSolver = new MazeSolver();
+
+            // Reset the maze.
+            maze1 = getNewMaze();
+
+            // Create the second maze by transposing the first maze
+            char[,] maze2 = transposeMaze(maze1);
+
+            // Solve the transposed maze
+            mazeSolver.SolveMaze(maze2, X_START, Y_START);
+
+            // Print the maze
+            mazeSolver.PrintMaze();
+
+            Console.WriteLine("Maze solved! (\"O\" indicates the successful path.) Press any key to continue.");
+            Console.ReadKey(true);
+
+        }
+    
+        // Transposes a given maze and returns it.
+        static char[,] transposeMaze(char[,] mazeToTranspose)
+        {
+
+            // Create an array that will store the new transposed version of the given maze
+            char[,] transposedVersion = new char[mazeToTranspose.GetLength(0), mazeToTranspose.GetLength(1)];
+
+            for (int secondDimensionIndex = 0; secondDimensionIndex <= mazeToTranspose.GetUpperBound(1); secondDimensionIndex++)
+            {
+                for (int firstDimensionIndex = 0; firstDimensionIndex <= mazeToTranspose.GetUpperBound(0); firstDimensionIndex++)
+                {
+                    // Transpose positions
+                    transposedVersion[secondDimensionIndex, firstDimensionIndex] = mazeToTranspose[firstDimensionIndex, secondDimensionIndex];
+                }
+            }
+
+            return transposedVersion;
+        }
+
+        static char[,] getNewMaze()
+        {
+            char[,] maze = 
             { { '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#' },
             { '#', '.', '.', '.', '#', '.', '.', '.', '.', '.', '.', '#' },
             { '#', '.', '#', '.', '#', '.', '#', '#', '#', '#', '.', '#' },
@@ -41,44 +87,47 @@ namespace cis237assignment2
             { '#', '.', '.', '.', '.', '.', '.', '#', '.', '.', '.', '#' },
             { '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#' } };
 
-            /// <summary>
-            /// Create a new instance of a mazeSolver.
-            /// </summary>
-            MazeSolver mazeSolver = new MazeSolver();
-
-            /// <summary>
-            /// Tell the instance to solve the first maze with the passed maze, and start coordinates.
-            /// </summary>
-            mazeSolver.SolveMaze(maze1, X_START, Y_START);
-
-            //Create the second maze by transposing the first maze
-            char[,] maze2 = transposeMaze(maze1);
-
-            //Solve the transposed maze.
-            mazeSolver.SolveMaze(maze2, X_START, Y_START);
-
+            return maze;
         }
 
-        /// <summary>
-        /// This method will take in a 2 dimensional char array and return
-        /// a char array maze that is flipped along the diagonal, or in mathematical
-        /// terms, transposed.
-        /// ie. if the array looks like 1, 2, 3
-        ///                             4, 5, 6
-        ///                             7, 8, 9
-        /// The returned result will be:
-        ///                             1, 4, 7
-        ///                             2, 5, 8
-        ///                             3, 6, 9
-        /// The current return statement is just a placeholder so the program
-        /// doesn't complain about no return value.
-        /// </summary>
-        /// <param name="mazeToTranspose"></param>
-        /// <returns>transposedMaze</returns>
-        static char[,] transposeMaze(char[,] mazeToTranspose)
+        static bool printNormally()
         {
-            //Write code her to create a transposed maze.
-            return new char[1, 1];
+            Console.WriteLine("Clear screen every time maze updates for a \"drawn\" effect? (y/n)");
+
+            bool printLikeNormal = true;
+
+            bool keepRepeating = true;
+
+            while (keepRepeating)
+            {
+                // Get key pressed 
+                string key = Console.ReadKey(true).KeyChar.ToString();
+
+                if (key != "y" && key != "n" && key != "Y" && key != "N")
+                {
+                    Console.WriteLine("Huh? Hit y or n.");
+                    keepRepeating = true;
+                }
+                else
+                {
+                    if (key == "y" || key == "Y")
+                    {
+                        printLikeNormal = false;
+                        keepRepeating = false;
+                    }
+                    else
+                    {
+                        if (key == "n" || key == "N")
+                        {
+                            printLikeNormal = true;
+                            keepRepeating = false;
+                        }
+                    }
+                }
+            }
+
+            return printLikeNormal;
+            
         }
     }
 }
